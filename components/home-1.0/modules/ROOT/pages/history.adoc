@@ -1,0 +1,55 @@
+= History
+
+== Long Story Short
+
+I had an interesting problem to solve in early December 2019.
+The problem was complete lack of usable printing APIs for mobile platforms.
+We had tried a few solutions.
+Vendor supplied mobile drivers were terrible at best.
+Hardly working, support only a limited set of network printer models.
+Printer discovery was impossible, if a printer is in another subnet.
+Not a good thing if you are connecting through multi-subnet, multi-VLAN enterprise network.
+We had to come up with a better solution.
+That  specific task of printing was successfully addressed by adding a few methods to a completely unrelated ASP.Net web-service and using GDI APIs (Architecture? What architecture?!).
+
+Nevertheless the very problem of printing from mobile device kept my mind busy.
+I had quickly realized that I had made a lot of "`Can't be mobile/web, because printing`" choices through my career.
+It felt like something unnatural somehow became pretty usual.
+Silly technical limitation became an architecture best practice.
+
+I began thinking about fixing the problem mid February, and wrote my first code in early March.
+Architecture stabilized in June.
+It started with printing, but soon I realized that wider specter of APIs should be covered.
+
+It did not seem challenging enough at first, so I decided to give a try to a few new languages and see as it goes.
+Learning a new language while developing from scratch should be fun.
+That is how I have learned Python after all.
+Candidates were Beef, D, Go, Rust, and Zig.
+To make it more reasonable I have included my old friends like C, C{plus}{plus}, and C#.
+But since there is much more of interfacing with operating system APIs, rather than fancy business logic, syntax advantages of new languages became unimportant and API wrapping became a headache.
+So I, as a proper nerd, did not consider my gut feeling as a valid reason and have created an exhaustive comparison spreadsheet instead.
+I have entered all parameters, their weight, and calculated some overall language performance points.
+After all that time I had spent trying out modern languages I decided to return to good old C{plus}{plus}.
+But still worth it, it was fun and I have learned something new.
+
+Honestly, it was not easy to recall my C{plus}{plus} knowledge.
+Language changed significantly since I used it last time for anything serious.
+I decided to go with the latest supported version of the C{plus}{plus} standard.
+While my choice is opinionated like any other choice of mine, I believe it is reasonable enough to not regret it soon.
+So modern C{plus}{plus} it is.
+
+Source code contains mix of proper C{plus}{plus} code based on platform independent standard library, and Windows(TM) specific code.
+These are separated, and platform specific class names are marked with `win_` prefix.
+
+== The Name
+
+I believe I came up with the current name on April 12th.
+It is NT-REST.
+I personally pronounce it like `ɛntəɹəst`. http://ipa-reader.xyz/?text=%C9%9Bnt%C9%99%C9%B9%C9%99st&voice=Joanna[Joanna^], http://ipa-reader.xyz/?text=%C9%9Bnt%C9%99%C9%B9%C9%99st&voice=Brian[Brian^].
+
+I am not a native English speaker (or any other Germanic language family native speaker), so would love to hear if it sounds weird to anybody.
+
+Name stands for **RE**presentational **S**tate **T**ransfer for Windows(TM) **NT** but also sounds like word *interest*.
+Of course vowel sounds are different, but who cares, it's similar enough.
+One almost reasonable meaning and one almost funny pun.
+Good enough for me to settle with the current name.

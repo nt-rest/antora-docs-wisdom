@@ -1,0 +1,6 @@
+= Licensing
+
+== xref:general-notes.adoc[]
+== xref:bsl-11.adoc[]
+== xref:bsd-4.adoc[]
+== xref:unlicense.adoc[]

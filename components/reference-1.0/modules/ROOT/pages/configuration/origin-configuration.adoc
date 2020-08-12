@@ -1,0 +1,213 @@
+= Origin's Configuration
+
+NT-REST may serve multiple different clients.
+For instance one client may be a web application which needs integrated authentication and another is a mobile application which prints.
+Each client shall be restricted differently.
+Therefore NT-REST has no global configuration but uses https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin[Origin header^] to distinguish clients.
+
+Origin's configuration is saved in Windows(TM) Registry, under `HKEY_LOCAL_MACHINE\SOFTWARE\TrifleSoft\NT-REST\Configuration\Origins` key's subkey.
+Subkey name should match value of https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin[Origin header^].
+
+.Registry key path example
+[example]
+HLKM\SOFTWARE\TrifleSoft\NT-REST\Configuration\Origins\http://example.com
+HLKM\SOFTWARE\TrifleSoft\NT-REST\Configuration\Origins\https://example.com:8443
+
+== List of supported values
+
+NOTE: Whenever NT-REST has to execute an HTTP request against some external web-site, you may use awesome https://httpbin.org/ service for debugging. +
+Please, be nice, and do not abuse external resources.
+
+[cols="3,2,3", options="header"]
+|===
+| Name
+| Type
+| Example
+| AuthenticationServiceAccountNames
+| REG_MULTI_SZ
+| AccountName +
+EXAMPLE\AccountName +
+EXAMPLE.COM\AccountName +
+account-name@example.com
+| AuthenticationServiceHttpHeaders
+| REG_MULTI_SZ
+| X-Custom-Header-1: Alpha +
+X-Custom-Header-2: Beta
+| AuthenticationServiceHttpMethod
+| REG_SZ
+| POST
+| AuthenticationServiceHttpUrl
+| REG_DWORD
+| https://example.com/callbacks/authentication
+| AuthenticationServicePermissions
+| REG_DWORD
+| 3
+| EventLogServicePermissions
+| REG_DWORD
+| 5
+| FingerprintingServiceHttpHeaders
+| REG_MULTI_SZ
+| X-Custom-Header-1: Alpha +
+X-Custom-Header-2: Beta
+| FingerprintingServiceHttpMethod
+| REG_SZ
+| POST
+| FingerprintingServiceHttpUrl
+| REG_SZ
+| https://example.com/callbacks/fingerprinting
+| FingerprintingServicePermissions
+| REG_DWORD
+| 1
+| IdentificationServiceHttpHeaders
+| REG_MULTI_SZ
+| X-Custom-Header-1: Alpha +
+X-Custom-Header-2: Beta
+| IdentificationServiceHttpMethod
+| REG_SZ
+| POST
+| IdentificationServiceHttpUrl
+| REG_SZ
+| https://example.com/callbacks/identification
+| IdentificationServicePermissions
+| REG_DWORD
+| 1
+| PrintingServicePermissions
+| REG_DWORD
+| 1
+|===
+
+== Detailed descriptions
+
+=== AuthenticationServiceAccountNames
+
+A multiline string, list of Windows(TM) account names, one account name per line.
+
+Regardsless of authentication method NT-REST needs Windows(NT) https://docs.microsoft.com/en-us/windows/win32/secauthn/lsa-logon-sessions[logon session^] token.
+If local authentication is used, token of the callee process is extracted implicitly, no additional configuration required.
+If relay authentication is used, token cannot be extracted without additional hints.
+To extract a token NT-REST enumerates logon sessions and select a logon session for an account with name from the list.
+If multiple logon session match, earliest one is selected.
+
+=== AuthenticationServiceHttpHeaders
+
+A multiline string, list of HTTP headers to be added to an HTTP request to a relay authentication server, one HTTP header per line.
+
+If relay authentication is used, server may expect additional headers. Headers are defined as name and value, separated by colon.
+
+=== AuthenticationServiceHttpMethod
+
+A single string, name of an HTTP method to be used for an HTTP request to a relay authentication server.
+
+=== AuthenticationServiceHttpUrl
+
+A single string, a URL to be used for an HTTP request to a relay authentication server.
+
+=== AuthenticationServicePermissions
+
+A 32-bit number, bitwise-OR of values corresponding to allowed actions.
+
+[cols="1,2", options="header"]
+|===
+| Value
+| Description
+| 1
+| Local authentication is allowed
+| 2
+| Relay authentication is allowed
+|===
+
+=== EventLogServicePermissions
+
+A 32-bit number, bitwise-OR of values corresponding to allowed actions.
+
+[cols="1,2", options="header"]
+|===
+| Value
+| Description
+| 1
+| Logging of EVENTLOG_SUCCESS events is allowed.
+| 2
+| Logging of EVENTLOG_ERROR_TYPE events is allowed.
+| 4
+| Logging of EVENTLOG_WARNING_TYPE events is allowed.
+| 16
+| Logging of EVENTLOG_INFORMATION_TYPE events is allowed.
+|===
+
+=== FingerprintingServiceHttpHeaders
+
+A multiline string, list of HTTP headers to be added to an HTTP request to a fingerprinting server, one HTTP header per line.
+
+Headers are defined as name and value, separated by colon.
+
+=== FingerprintingServiceHttpMethod
+
+A single string, name of an HTTP method to be used for an HTTP request to a fingerprinting server.
+
+=== FingerprintingServiceHttpUrl
+
+A single string, a URL to be used for an HTTP request to a fingerprinting server.
+
+=== FingerprintingServicePermissions
+
+A 32-bit number, bitwise-OR of values corresponding to allowed actions.
+
+[cols="1,2", options="header"]
+|===
+| Value
+| Description
+| 1
+| Fingerprinting is allowed
+|===
+
+=== IdentificationServiceHttpHeaders
+
+A multiline string, list of HTTP headers to be added to an HTTP request to an identification server, one HTTP header per line.
+
+Headers are defined as name and value, separated by colon.
+
+=== IdentificationServiceHttpMethod
+
+A single string, name of an HTTP method to be used for an HTTP request to an identification server.
+
+=== IdentificationServiceHttpUrl
+
+A single string, a URL to be used for an HTTP request to an identification server.
+
+=== IdentificationServicePermissions
+
+A 32-bit number, bitwise-OR of values corresponding to allowed actions.
+
+[cols="1,2", options="header"]
+|===
+| Value
+| Description
+| 1
+| Identification is allowed
+|===
+
+=== PrintingServicePermissions
+
+== Registry File Example
+
+[source,ini]
+----
+Windows Registry Editor Version 5.00 
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\TrifleSoft\NT-REST\Configuration\Origins\http://example.com]
+"AuthenticationServiceAccountNames"=hex(7):41,00,63,00,63,00,6f,00,75,00,6e,00,74,00,4e,00,61,00,6d,00,65,00,00,00,45,00,58,00,41,00,4d,00,50,00,4c,00,45,00,5c,00,41,00,63,00,63,00,6f,00,75,00,6e,00,74,00,4e,00,61,00,6d,00,65,00,00,00,45,00,58,00,41,00,4d,00,50,00,4c,00,45,00,2e,00,43,00,4f,00,4d,00,5c,00,41,00,63,00,63,00,6f,00,75,00,6e,00,74,00,4e,00,61,00,6d,00,65,00,00,00,61,00,63,00,63,00,6f,00,75,00,6e,00,74,00,2d,00,6e,00,61,00,6d,00,65,00,40,00,65,00,78,00,61,00,6d,00,70,00,6c,00,65,00,2e,00,63,00,6f,00,6d,00,00,00,00,00
+"AuthenticationServiceHttpHeaders"=hex(7):58,00,2d,00,43,00,75,00,73,00,74,00,6f,00,6d,00,2d,00,48,00,65,00,61,00,64,00,65,00,72,00,2d,00,31,00,3a,00,20,00,41,00,6c,00,70,00,68,00,61,00,00,00,58,00,2d,00,43,00,75,00,73,00,74,00,6f,00,6d,00,2d,00,48,00,65,00,61,00,64,00,65,00,72,00,2d,00,32,00,3a,00,20,00,42,00,65,00,74,00,61,00,00,00,00,00
+"AuthenticationServiceHttpMethod"="POST"
+"AuthenticationServiceHttpUrl"="https://example.com/callbacks/authentication"
+"AuthenticationServicePermissions"=dword:00000003
+"EventLogServicePermissions"=dword:00000017
+"FingerprintingServiceHttpHeaders"=hex(7):58,00,2d,00,43,00,75,00,73,00,74,00,6f,00,6d,00,2d,00,48,00,65,00,61,00,64,00,65,00,72,00,2d,00,31,00,3a,00,20,00,41,00,6c,00,70,00,68,00,61,00,00,00,58,00,2d,00,43,00,75,00,73,00,74,00,6f,00,6d,00,2d,00,48,00,65,00,61,00,64,00,65,00,72,00,2d,00,32,00,3a,00,20,00,42,00,65,00,74,00,61,00,00,00,00,00
+"FingerprintingServiceHttpMethod"="POST"
+"FingerprintingServiceHttpUrl"="https://example.com/callbacks/fingerprinting"
+"FingerprintingServicePermissions"=dword:00000001
+"IdentificationServiceHttpHeaders"=hex(7):58,00,2d,00,43,00,75,00,73,00,74,00,6f,00,6d,00,2d,00,48,00,65,00,61,00,64,00,65,00,72,00,2d,00,31,00,3a,00,20,00,41,00,6c,00,70,00,68,00,61,00,00,00,58,00,2d,00,43,00,75,00,73,00,74,00,6f,00,6d,00,2d,00,48,00,65,00,61,00,64,00,65,00,72,00,2d,00,32,00,3a,00,20,00,42,00,65,00,74,00,61,00,00,00,00,00
+"IdentificationServiceHttpMethod"="POST"
+"IdentificationServiceHttpUrl"="https://example.com/callbacks/identification"
+"IdentificationServicePermissions"=dword:00000001
+"PrintingServicePermissions"=dword:00000000
+----

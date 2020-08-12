@@ -1,0 +1,6 @@
+= Reference
+
+NOTE: References are information oriented.
+
+== xref:api/index.adoc[]
+== xref:configuration/index.adoc[]

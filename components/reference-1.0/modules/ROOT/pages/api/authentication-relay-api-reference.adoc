@@ -1,0 +1,206 @@
+= Authentication (Relay)
+
+Authenticates a client against relay authentication server and creates a session.
+
+== Client &hArr; NT-REST
+
+Loopback and remote connections.
+Anonymous connections only.
+
+=== Request
+
+[cols="1,7", options="header"]
+|===
+| Method
+| URL
+| POST
+| http://localhost.ntre.st/nt-rest/v1/authentication
+|===
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| X-Authentication-Mode
+| Yes
+| relay
+|===
+
+All other headers, except the headers from the list below, are forwarded from client to relay authentication server.
+include::partial$relay-client-ignored-headers.adoc[]
+
+==== Body
+
+No request body is required.
+However, any non-empty request body received from client is forwarded from client to relay authentication server as is, without any processing.
+
+=== Response
+
+==== Status
+
+Status code returned by relay authentication server is forwarded from relay authentication server to client as is, without any processing.
+Recommended status codes are:
+
+201:: Authentication succeeded.
+401:: Authentication failed.
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| X-Authentication-Mode
+| Yes
+| relay
+| Set-Cookie
+| Yes
+| Session-ID=<session-id>; Max-Age=86400; SameSite=Lax; HttpOnly;
+| X-Session-ID
+| Yes
+| <session-id>
+|===
+
+All other headers, except the headers from the list below, are forwarded from relay authentication server to client.
+include::partial$relay-server-ignored-headers.adoc[]
+
+==== Body
+
+No response body is required.
+However, any non-empty response body received from relay authentication server is forwarded from relay authentication server to client as is, without any processing.
+
+== NT-REST &hArr; Server
+
+=== Request
+
+[cols="1,1", options="header"]
+|===
+| Method
+| URL
+| xref:configuration/origin-configuration.adoc[Configured per origin]
+| xref:configuration/origin-configuration.adoc[Configured per origin]
+|===
+
+==== Headers
+
+All headers, except the headers from the list below, are forwarded from client to relay authentication server.
+
+All xref:configuration/origin-configuration.adoc[statically configured headers].
+
+include::partial$relay-client-ignored-headers.adoc[]
+
+==== Body
+
+Any request body received from client is forwarded from client to relay authentication server as is, without any processing.
+
+=== Response
+
+==== Status
+
+Status code returned by relay authentication server is forwarded from relay authentication server to client as is, without any processing.
+Recommended status codes are:
+
+201:: Authentication succeeded.
+401:: Authentication failed.
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| X-Authorization-User
+| No
+| User accounts. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Group
+| No
+| Group membership entries. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Domain
+| No
+| Domain membership entries. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Alias
+| No
+| Built-in group membership entries. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-WellKnownGroup
+| No
+| Well-known group membership entries. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-DeletedAccount
+| No
+| Deleted accounts. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Invalid
+| No
+| Invalid entries. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Unknown
+| No
+| Unknown entries. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Computer
+| No
+| Computer accounts. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-Label
+| No
+| Labels. One or multiple headers. Each header contains a value or a list of comma separated values.
+| X-Authorization-LogonSession
+| No
+| Logon sessions. One or multiple headers. Each header contains a value or a list of comma separated values.
+|===
+
+All other headers, except the headers from the list below, are forwarded from relay authentication server to client.
+
+include::partial$relay-server-ignored-headers.adoc[]
+
+==== Body
+
+Any non-empty response body received from relay authentication server is forwarded from relay authentication server to client as is, without any processing.
+
+== Client Example
+
+=== JavaScript
+
+[source,javascript]
+----
+fetch(
+    'http://localhost.ntre.st/nt-rest/v1/authentication',
+    {
+        method: 'PUT',
+        cache: 'no-cache',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Authentication-Mode': 'relay'
+        },
+        redirect: 'error',
+        referrerPolicy: 'origin-when-cross-origin',
+        body: '<additional-data>'
+    }
+);
+----

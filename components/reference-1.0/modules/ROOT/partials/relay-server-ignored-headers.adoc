@@ -1,0 +1,20 @@
+
+List of ignored headers::
+
+ * Access-Control-Allow-Credentials
+ * Access-Control-Allow-Headers
+ * Access-Control-Allow-Methods
+ * Access-Control-Allow-Origin
+ * Access-Control-Expose-Headers
+ * X-Authentication-Mode
+ * X-Authorization-Alias
+ * X-Authorization-Computer
+ * X-Authorization-DeletedAccount
+ * X-Authorization-Domain
+ * X-Authorization-Group
+ * X-Authorization-Unknown
+ * X-Authorization-Invalid
+ * X-Authorization-Label
+ * X-Authorization-LogonSession
+ * X-Authorization-User
+ * X-Authorization-WellKnownGroup

@@ -1,0 +1,125 @@
+= Event Log
+
+Creates an event log record.
+
+== Client &hArr; NT-REST
+
+Loopback connections only.
+Authenticated connections only.
+
+=== Request
+
+[cols="1,7", options="header"]
+|===
+| Method
+| URL
+| PUT
+| http://localhost.ntre.st/nt-rest/v1/eventlog
+|===
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| Cookie
+| Yes
+| Session-ID=<session-id>
+| X-Session-ID
+| Yes
+| <session-id>
+|===
+
+==== Body
+
+Description of an event record.
+
+[source,json]
+----
+{
+    "record":
+    {
+        "severity": "success", <!--1-->
+        "category": "client_other", <!--2-->
+        "message": "Some message.", <!--3-->
+        "arguments": ["A", "B", "C"] <!--4-->
+    }
+}
+----
+<1> Event log record severity. Can be `success`, `informational`, `warning`, or `error`.
+<2> Event log record category. Can be `server_storage`, `server_application`, `server_presentation`, `server_other`, `client_storage`, `client_application`, `client_presentation`, `client_other`, `security_authentication`, `security_authorization`, `security_audit`, `security_other`, `network`, or `assert`.
+<3> Event log record text. Any text is allowed.
+<4> An optional array of additional parameters. To pass no additional parameters, do not omit property altogether or pass null. Pass an empty array.
+
+=== Response
+
+==== Status
+
+201:: Event log record successfully created.
+403:: Adding an event record with specified severity is forbidden.
+
+==== Headers
+
+No information is returned in headers.
+
+==== Body
+
+Description of an event record, semantically equivalent to the description received, but not byte-to-byte match.
+
+[source,json]
+----
+{
+    "record":
+    {
+        "severity": "success", <!--1-->
+        "category": "client_other", <!--2-->
+        "message": "Some message.", <!--3-->
+        "arguments": ["A", "B", "C"] <!--4-->
+    }
+}
+----
+<1> Event log record severity. Can be `success`, `informational`, `warning`, or `error`.
+<2> Event log record category. Can be `server_storage`, `server_application`, `server_presentation`, `server_other`, `client_storage`, `client_application`, `client_presentation`, `client_other`, `security_authentication`, `security_authorization`, `security_audit`, `security_other`, `network`, or `assert`.
+<3> Event log record text. Any text is allowed.
+<4> An optional array of additional parameters. To pass no additional parameters, do not omit property altogether or pass null. Pass an empty array.
+
+== Client Example
+
+=== JavaScript
+
+[source,javascript]
+----
+fetch(
+    'http://localhost.ntre.st/nt-rest/v1/eventlog',
+    {
+        method: 'PUT',
+        cache: 'no-cache',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Session-ID': '<session-id>'
+        },
+        redirect: 'error',
+        referrerPolicy: 'origin-when-cross-origin',
+        body: JSON.stringify({
+            record: {
+                severity: 'error',
+                category: 'server_storage',
+                message: 'Some message.',
+                arguments: ['A', 'B', 'C']
+            }
+        })
+    }
+);
+----

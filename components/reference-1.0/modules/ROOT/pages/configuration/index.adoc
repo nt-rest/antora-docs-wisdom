@@ -1,0 +1,3 @@
+= Configuration Reference
+
+== xref:configuration/origin-configuration.adoc[]

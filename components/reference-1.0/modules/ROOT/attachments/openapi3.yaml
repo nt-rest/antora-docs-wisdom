@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: NT-REST API
+  description: 'https://nt-rest.com/'
+tags:
+- name: "Version"
+  description: ""
+- name: "Identification"
+  description: ""
+- name: "Fingerprinting"
+  description: ""
+- name: "Event Log"
+  description: ""
+- name: "Local Authentication"
+  description: ""
+- name: "Relay Authentication"
+  description: ""
+paths:
+  /version:
+    post:
+      tags:
+        - "Version"
+      description: Returns version information
+      security:
+        - cookie_auth: []
+        - header_auth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/resp_version'
+components:
+  securitySchemes:
+    cookie_auth:
+      type: apiKey
+      in: cookie
+      name: Session-ID
+    header_auth:
+      type: apiKey
+      in: header
+      name: X-Session-ID
+  schemas:
+    out_version:
+      type: object
+      required:
+        - build
+        - api
+      properties:
+        build:
+          type: object
+          properties:
+            compiler:
+              type: string
+              example: Visual Studio 2019 version 16.0
+            timestamp:
+              type: integer
+              example: 20200101
+            year:
+              type: integer
+              example: 2020
+            month:
+              type: integer
+              example: 1
+            day:
+              type: integer
+              example: 1
+            debug:
+              type: boolean
+              example: false
+            arch:
+              type: integer
+              example: 64
+        api:
+          type: object
+          properties:
+            versions:
+              type: array
+              items:
+                type: string
+                example: "v1"
+  responses:
+    resp_version:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/out_version'
+                  
+servers:
+  - description: Loopback Connection
+    url: http://localhost.ntre.st/nt-rest/v1/
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/triflesoft/NT-REST/1.0

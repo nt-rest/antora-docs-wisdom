@@ -1,0 +1,9 @@
+name: 'home'
+title: '01-sort-order'
+version: '1.0'
+nav: 
+- modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    category: root-pre
+    display_name: Home

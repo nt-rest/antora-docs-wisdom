@@ -1,0 +1,34 @@
+
+List of ignored headers::
+
+ * Accept
+ * Accept-Encoding
+ * Allow
+ * Authorization
+ * Cache-Control
+ * Connection
+ * Content-Encoding
+ * Content-Length
+ * Content-Location
+ * Content-Range
+ * Content-Type
+ * Cookie
+ * Date
+ * Expect
+ * Expires
+ * From
+ * Host
+ * Keep-Alive
+ * Last-Modified
+ * Max-Forwards
+ * Pragma
+ * Proxy-Authorization
+ * Range
+ * Te
+ * Trailer
+ * Transfer-Encoding
+ * Translate
+ * Upgrade
+ * User-Agent
+ * Via
+ * Warning

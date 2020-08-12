@@ -1,0 +1,8 @@
+= API Reference
+
+== xref:api/authentication-local-api-reference.adoc[]
+== xref:api/authentication-relay-api-reference.adoc[]
+== xref:api/eventlog-api-reference.adoc[]
+== xref:api/fingerprinting-api-reference.adoc[]
+== xref:api/identification-api-reference.adoc[]
+== xref:api/version-api-reference.adoc[]

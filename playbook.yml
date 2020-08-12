@@ -1,0 +1,36 @@
+site:
+  title: NT-REST Docs
+  url: https://docs.nt-rest.com/
+content:
+  sources: 
+  - url: .
+    start_path: components/home-1.0
+  - url: .
+    start_path: components/tutorials-1.0
+  - url: .
+    start_path: components/howto-1.0
+  - url: .
+    start_path: components/reference-1.0
+  - url: .
+    start_path: components/explanations-1.0
+  - url: .
+    start_path: components/licensing-1.0
+  - url: .
+    start_path: components/store-1.0
+asciidoc:
+  attributes:
+    experimental: true
+    kroki-fetch-diagram: true
+  extensions:
+    - asciidoctor-kroki
+    #- ./lib/swagger-ui-block-macro.js
+    #- ./lib/tabs-block.js
+ui:
+  bundle:
+    url: ../antora-docs-design/build/ui-bundle.zip
+    #url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+  output_dir: static
+  supplemental_files: ./supplemental_files
+output:
+  dir: ../nt-rest.github.io/docs/

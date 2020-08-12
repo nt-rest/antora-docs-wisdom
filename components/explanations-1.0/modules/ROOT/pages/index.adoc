@@ -1,0 +1,6 @@
+= Explanations
+
+NOTE: Explanations are understanding oriented.
+
+== xref:authentication-flow.adoc[]
+== xref:security.adoc[]

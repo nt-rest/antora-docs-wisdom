@@ -1,0 +1,5 @@
+= How To Install
+
+We have no official releases yet so no installation guide either.
+Just compile and run.
+Sorry.

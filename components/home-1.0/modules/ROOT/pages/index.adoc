@@ -1,0 +1,118 @@
+= Overview
+
+NT-REST is a HTTP/REST adapter for Windows(TM) Desktop APIs.
+NT-REST is a background service which provides web-services to third party web-sites and mobile applications.
+
+NT-REST is Windows(TM) specific so far. Specifically Windows(TM) 8.1 and Windows(TM) 10 are supported. Linux and Mac versions are possible in theory, but we prefer to focus on 88% of desktops for now. We really love Linux though ❤️.
+
+== Why?
+
+=== The Problem
+
+In general web applications are cheaper to develop, cheaper to maintain, and cheaper to deploy, than desktop applications.
+Many tasks which were considered too heavy for the web in the past, are implemented with web technologies now.
+Microsoft(TM) Excel(TM) Online and Google(TM) Sheets(TM) for spreadsheets, Figma(TM) for graphics design are great examples of such modern web applications.
+
+On the other hand, in some environments, desktop PCs cannot replace mobile devices. But mobile operating systems, either Android(TM) or iOS(TM) provide limited to no support for features considered usual for a desktop.
+
+Many enterprise applications could be web-based but are not, because they need access to various desktop-only APIs.
+
+==== Printing and imaging
+
+Neither web-browsers, not mobile operating systems, provide any usable printing APIs.
+Printing is important, whether it is cheque, report or handout.
+Most websites just give up on printing and export PDFs asking users to print them by some external means.
+Most mobile applications do not support printing at all; some use highly restricted, almost dysfunctional, vendor specific solutions.
+Mobile user experience is terrible, starting with printer discovery and ending with A4/Letter confusion.
+If printing is an essential part of an application’s workflow, like for a cash desk, web or mobile technologies are simply unusable.
+Google Cloud Print is https://support.google.com/chrome/a/answer/9633006[discontinued^], so the situation will become even worse.
+Scanning with preview and crop? It's simply impossible.
+
+==== Industrial devices
+
+There are a lot of industrial hardware devices, which are very specific to corresponding industries.
+None of them can be accessed from a web-browser, if not explicitly supported, like FIDO tokens.
+However, most devices can be accessed via text-based protocols over serial ports. Modems with their AT command set, various rugged meters, thermal printers speaking ESC/P.
+Web-browsers provide no APIs to communicate over serial ports, while serial port semantics maps to web sockets pretty well.
+
+==== Authentication, Authorization, Audit
+
+Web-browsers give no direct access to authorization, authentication and audit APIs provided by an operating system.
+Windows(TM) workstations are usually joined to an Active Directory(TM) domain.
+Permissions are managed by group membership within a domain.
+Usual enterprise has hundreds, if not thousands, of configuration entries.
+Group policies, restricted logon hours, whitelisted logon workstations, centralized collection of event logs serve daily needs.
+Every desktop application may call a few simple APIs to check if a current user has a privilege, is a member of some group, or simply list all groups of a current user.
+Writing an important message to the event log is not a hard task either.
+But web based applications, if not run in local network under very specific configuration, cannot access authentication and authorization information.
+Any other web based application has no single sign-on, and no federated Active Directory(TM) authentication.
+Event log is never accessible.
+
+=== The Solution
+
+NT-REST.
+A Windows(TM) background service which provides HTTP/REST web-services to utilize Windows(TM) Desktop APIs.
+Web and mobile applications can now fully integrate into desktop environments.
+
+==== Secure
+
+Security is paramount for the modern web. Nothing in NT-REST is implicitly allowed.
+Permissions are fine grained by Origin and API family.
+Only Administrators can change configuration.
+If possible, processing of data is performed by a separate process in a sandboxed environment.
+
+==== Robust
+
+Source code is verified with various static code analysis tools, and compiles without warnings.
+Binaries are verified with https://docs.microsoft.com/en-us/windows-hardware/drivers/devtest/application-verifier[Microsoft(TM) Application Verifier^].
+
+==== Manageable
+
+Configuration is stored in Windows(TM) Registry and can be easily managed by Active Directory group policies or by https://support.microsoft.com/en-us/help/310516/#syntax[REG files^] distributed and applied separately.
+
+== How?
+
+* Install precompiled binaries xref:how-tos:how-to-install.adoc[]
+* Or compile by yourself xref:how-tos:how-to-compile.adoc[]
+
+== Who?
+
+We are TrifleSoft LLC.
+I am Roman, a fanatical developer. I have being employed in various financial institutions most of my career and I am simply tired with current state of things in enterprise software development. While I may know a lot, I do not consider myself an indisputable expert. Any piece of advice is very welcome. 
+
+== Dependencies
+
+NT-REST depends on https://sqlite.org/index.html[SQLite^] for persistent storage and on https://github.com/danielaparker/jsoncons/[jsoncons^] for JSON, BSON, CBOR, MsgPack and UBJSON parsing.
+
+While not external dependencies by definition but operating system components, it's worth mentioning that NT-REST depends on https://docs.microsoft.com/en-us/windows/win32/fileio/i-o-completion-ports[I/O Completion Ports^], https://docs.microsoft.com/en-us/windows/win32/http/http-api-start-page[HTTP Server API^] and https://docs.microsoft.com/en-us/windows/win32/websock/web-socket-protocol-component-api-portal[WebSocket Protocol Component API^].
+
+== Roadmap
+
+* [ ] Local APIs
+** [x] Version API;
+** [x] Local authentication API;
+** [x] Relay authentication API;
+** [x] Identification API;
+** [x] Event log API;
+** [x] Fingerprinting API;
+** [ ] Local printing API;
+*** [ ] Monitor;
+*** [ ] RTF support;
+*** [ ] PDF support;
+*** [ ] XPS support;
+** [ ] Local scanning API;
+** [ ] Serial port API;
+* [ ] Support Infrastructure
+** [ ] CMD (Zip) reference installer source code
+** [ ] WiX (MSI) reference installer source code
+** [ ] NSIS reference installer source code
+** [ ] Inno reference installer source code
+** [ ] Update server
+** [ ] Update helper
+** [ ] Executables are digitally signed by Extended Validation certificate. SmartScreen will never report a false positive.
+** [ ] Executables are verified against anti-virus databases. Most popular anti-viruses will never report a false positive.
+** [ ] Source code is verified by an external security audit.
+* [ ] Cloud APIs
+** [ ] Cloud printing API.
+*** [ ] Cloud printing additional file formats: Microsoft(TM) Word(TM), Microsoft(TM) Excel(TM), etc.
+** [ ] Cloud scanning API.

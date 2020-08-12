@@ -1,0 +1,113 @@
+= Version
+
+Returns version information.
+
+== Client &hArr; NT-REST
+
+Loopback and remote connections.
+Anonymous and authenticated connections.
+
+=== Request
+
+[cols="1,7", options="header"]
+|===
+| Method
+| URL
+| POST
+| http://localhost.ntre.st/nt-rest/v1/version
+|===
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| Cookie
+| No
+| Session-ID=<session-id>
+| X-Session-ID
+| No
+| <session-id>
+|===
+
+==== Body
+
+No request body is required.
+
+=== Response
+
+==== Status
+
+201:: Event log record successfully created.
+
+==== Headers
+
+No information is returned in headers.
+
+==== Body
+
+NOTE: If client is not authenticated some properties of "`build`" object may be shadowed with fake values.
+
+[source,json]
+----
+{
+  "build":
+  {
+    "compiler": "Visual Studio 2019 version 16.6", <!--1-->
+    "timestamp": 20200101, <!--2-->
+    "year": 2020, <!--3-->
+    "month": 6, <!--4-->
+    "day": 6, <!--5-->
+    "debug": true, <!--6-->
+    "arch": 64 <!--7-->
+  },
+  "api":
+  {
+    "versions": [ "v1" ] <!--8-->
+  }
+}
+----
+<1> Visual Studio(TM) version used to build NT-REST.
+<2> Year, month and day at which NT-REST was build as an integer number.
+<3> Year at which NT-REST was build.
+<4> Month at which NT-REST was build.
+<5> Day at which NT-REST was build.
+<6> "`true`" if build is debug; "`false`" otherwise.
+<7> Architecture for which NT-REST was build, 32 or 64.
+<8> API versions supported.
+
+== Client Example
+
+=== JavaScript
+
+[source,javascript]
+----
+fetch(
+    'http://localhost.ntre.st/nt-rest/v1/version',
+    {
+        method: 'POST',
+        cache: 'no-cache',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        redirect: 'error',
+        referrerPolicy: 'origin-when-cross-origin'
+    }
+);
+----
+
+=== Swagger UI
+
++++<div class='swagger-ui' data-url='/nt-rest/1.0/_attachments/openapi3.yaml' data-filter='Version'></div>+++

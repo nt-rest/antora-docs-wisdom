@@ -1,0 +1,9 @@
+name: 'store'
+title: '01-sort-order'
+version: '1.0'
+nav: 
+- modules/ROOT/nav.adoc
+asciidoc:
+  attributes:
+    category: root-post
+    display_name: Store

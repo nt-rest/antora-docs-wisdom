@@ -1,0 +1,102 @@
+= Authentication (Local)
+
+Authenticates a client against Windows(TM) accounts and creates a session.
+
+== Client &hArr; NT-REST
+
+=== Request
+
+Loopback connections only.
+Anonymous connections only.
+
+[cols="1,7", options="header"]
+|===
+| Method
+| URL
+| POST
+| http://localhost.ntre.st/nt-rest/v1/authentication
+|===
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| X-Authentication-Mode
+| Yes
+| local
+|===
+
+==== Body
+
+No request body is required.
+
+=== Response
+
+==== Status
+
+201:: Authentication succeeded.
+401:: Authentication failed.
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| X-Authentication-Mode
+| Yes
+| local
+| Set-Cookie
+| Yes
+| Session-ID=<session-id>; Max-Age=86400; SameSite=Lax; HttpOnly;
+| X-Session-ID
+| Yes
+| <session-id>
+|===
+
+==== Body
+
+No response body is required.
+
+== Client Example
+
+=== JavaScript
+
+[source,javascript]
+----
+fetch(
+    'http://localhost.ntre.st/nt-rest/v1/authentication',
+    {
+        method: 'PUT',
+        cache: 'no-cache',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Authentication-Mode': 'relay'
+        },
+        redirect: 'error',
+        referrerPolicy: 'origin-when-cross-origin'
+    }
+);
+----

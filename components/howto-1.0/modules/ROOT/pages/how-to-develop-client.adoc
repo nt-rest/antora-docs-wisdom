@@ -1,0 +1,67 @@
+= How To Develop Client
+
+== Information to consider before you start developing your client
+
+=== Making an HTTP Request
+
+Domain name `localhost.ntre.st` is mapped to the IPv4 address `127.0.0.1` and can be used instead of `127.0.0.0/24` IPv4 address or `localhost` domain name.
+
+Domain name `localhost.ntre.st` is mapped to the IPv6 address `::1` and can be used instead of `::1` IPv6 address or `localhost` domain name.
+
+NOTE: Even if no body is send with request, `Content-Type` header *MUST* be specified anyway.
+`Content-Type` of request determines `Content-Type` of response, that is why requests without `Content-Type` cannot be processed properly.
+
+=== Viewing Logs
+
+On startup NT-REST logs `Information` level event log record to `Application` Windows(TM) Log with path to a file with other messages.
+
+.Event log record example
+[example]
+Started logging to file "C:\Windows\system32\config\systemprofile\AppData\Local\triflesoft\ntrest\server-ntrest-binder.exe-f0e1d2c3\logs\2020-01-01.log".
+
+Once a day log file is rolled over and another `Information` level event is logged to `Application` Windows(TM) Log with a new path to a file.
+Use Windows (TM) Event Viewer application to view these events.
+
+It may happen so, that despite you have administrative privileges, you cannot access a directory containing a file with Windows Explorer or any other file manager. We recommend opening a log file directly by full path; or copying a log file with https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/copy[copy command^] to any accessible place, for instance your desktop.
+
+.Copy log file
+[source,bat]
+cd %WINDIR%\System32\config\systemprofile\AppData\Local\triflesoft\nt-rest\server-ntrest-binder.exe\logs
+copy 2020-01-01.log %USERPROFILE%\Desktop
+
+TIP: Define `NTREST_LOG_DEBUG` environment variable to log `debug` level messages to file. Most probably you do not need this. +
+Define `NTREST_LOG_TRACE` environment variable to log `trace` level messages to file. Most probably you do not need this.
+
+TIP: `.\examples\` directory contains API usage examples for JavaScript. Use `Network` tab of developer's console (kbd:[F12]) of your browser to view raw requests and responses.
+
+=== Running as a Service
+
+To install NT-REST service with default configuration run the following command
+
+.Install Windows(TM) service
+[source,bat]
+server-ntrest-binder /install
+
+If you run NT-REST service under a custom user account, you may be asked to grant "`Log on as a service`" privilege.
+Revoking this privilege is simple.
+Run "`Local Security Policy`" from "`Administrative Tools`".
+Browse to "`Local Policies\User Rights Assignment`".
+Remove unnecessary accounts from "`Log on as a service`".
+
+=== Configuring SSL Certificates
+
+.Create self signed CA and new signed certificate with OpenSSL/Linux
+[source,bat]
+openssl req -new -x509 -nodes -out ca.local.crt -keyout ca.local.key -subj "/CN=ca.local" -newkey rsa:4096 -days 10000 -sha512
+openssl req -new -out <hostname>.req -keyout <hostname>.key -nodes -newkey rsa:4096 -subj "/CN=<hostname>"
+openssl x509 -req -in <hostname>.req -CAkey  ca.local.key -CA ca.local.crt -days 10000 -set_serial 1 -sha512 -out <hostname>.crt
+openssl pkcs12 -export -out <hostname>.pfx -inkey <hostname>.key -in <hostname>.crt
+
+.Setup certificate for Windows(TM)
+[source,bat]
+netsh http delete sslcert ipport=0.0.0.0:443
+netsh http add sslcert ipport=0.0.0.0:443     certhash=325726d1e2a1ed8f1b6851cef9c284d771a79db8 certstorename=MY disablelegacytls=enable appid={01234567-89AB-CDEF-0123-456789ABCDEF}
+netsh http delete sslcert hostnameport=<hostname>:443
+netsh http add sslcert hostnameport=<hostname>:443 certhash=325726d1e2a1ed8f1b6851cef9c284d771a79db8 certstorename=MY disablelegacytls=enable appid={01234567-89AB-CDEF-0123-456789ABCDEF}
+
+Replace "`<hostname>`" and "`\{01234567-89AB-CDEF-0123-456789ABCDEF}`" with actual values for your execution environment.

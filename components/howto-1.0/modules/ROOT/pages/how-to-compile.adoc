@@ -1,0 +1,40 @@
+= How To Compile
+
+== Prerequisites 
+
+=== Mandatory
+
+* Microsoft(TM) Visual Studio(TM) 2019. Community Edition is good enough.
+** Desktop Development with C++
+** MSVC v142 - VS 2019 C++ x64/x86 Spectre-mitigated libs (v14.26)
+** Windows 10 SDK (10.0.18362.0)
+* Internet connection.
+
+=== Optional
+
+* A git client to check out source code. Downloading archive file is fine.
+
+== Compilation
+
+* Download source code
++
+.Recommended: check out source code with git client
+[source,bash]
+git clone https://github.com/nt-rest/nt-rest.git
++
+.NOT recommended: download and unpack archive with source code
+[source,bash]
+curl -L -o nt-rest.tar.gz https://api.github.com/repos/nt-rest/nt-rest/tarball/ +
+tar -xf nt-rest.tar.gz
++
+* Read all licenses under `.\licenses\` directory. Really do.
+* Execute PowerShell(TM) script `.\vendor.ps1`. +
+This script downloads various dependencies from Internet. This step may fail unexpectedly, so make sure this step succeeded.
+* Open `nt-rest.sln` with Microsoft(TM) Visual Studio(TM).
+* Select solution platform matching platform type of your machine, either `x64` or `x86`. To figure out platform type of your machine, execute +
++
+[source,bash]
+systeminfo | findstr /C:"System Type"
++
+* Build. It may take some time.
+* Find results under `.\executables\` directory.

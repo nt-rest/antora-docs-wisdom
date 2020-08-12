@@ -1,0 +1,384 @@
+= Fingerprinting
+
+Sends fingerprinting information to a fingerprinting server.
+
+Fingerprinting information consists of nine fingerprints, based on model names and serials numbers of various machine components.
+If component is replaced, some fingerprints will change, but not all of them.
+Each fingerprint is a secure hash of client origin and component data.
+In other words, fingerprints for different client origins do not match.
+Despite fingerprints are numbered in documentation, no  particular fingerprint order is preserved.
+Fingerprints are always sent in a random order.
+While fingerprint sources are well defined, is should be impossible to easily deduct which system component changed.
+Not all components are always meaningful.
+Desktops unlike laptops, have no battery, virtual machines BIOS and motherboard are fake.
+
+At least three of nine fingerprints will not change after any reasonable upgrade.
+
+[cols="1,4a,4a,4a", options="header"]
+|===
+| #
+| Component #1
+| Component #2
+| Component #3
+| 1
+| Fixed Disk Drives
+
+* Firmware Revision
+* Model
+* Name
+* Serial Number
+| Motherboard
+
+* Manufacturer
+* Product
+* Serial Number
+| BIOS
+
+* Version
+* Manufacturer
+* Serial Number
+| 2
+| Network Adapters
+
+* MAC Address
+* Manufacturer
+* Name
+| Motherboard
+
+* Manufacturer
+* Product
+* Serial Number
+| BIOS
+
+* Version
+* Manufacturer
+* Serial Number
+| 3
+| RAM Modules
+
+* Manufacturer
+* Part Number
+* Serial Number
+| Motherboard
+
+* Manufacturer
+* Product
+* Serial Number
+| BIOS
+
+* Version
+* Manufacturer
+* Serial Number
+| 4
+| Fixed Disk Drives
+
+* Firmware Revision,
+* Model,
+* Name,
+* Serial Number
+| Operating System
+
+* Install Date
+* Name
+* Serial Number
+| CPUs
+
+* Manufacturer
+* Name
+* Revision
+| 5
+| Network Adapters
+
+* MAC Address
+* Manufacturer
+* Name
+| Operating System
+
+* Install Date
+* Name
+* Serial Number
+| CPUs
+
+* Manufacturer
+* Name
+* Revision
+| 6
+| RAM Modules
+
+* Manufacturer
+* Part Number
+* Serial Number
+| Operating System
+
+* Install Date
+* Name
+* Serial Number
+| CPUs
+
+* Manufacturer
+* Name
+* Revision
+| 7
+| Fixed Disk Drives
+
+* Firmware Revision,
+* Model,
+* Name,
+* Serial Number
+| Video Adapters
+
+* Name
+| Batteries
+
+* Manufacturer
+* Name
+| 8
+| Network Adapters
+
+* MAC Address
+* Manufacturer
+* Name
+| Video Adapters
+
+* Name
+| Batteries
+
+* Manufacturer
+* Name
+| 9
+| RAM Modules
+
+* Manufacturer
+* Part Number
+* Serial Number
+| Video Adapters
+
+* Name
+| Batteries
+
+* Manufacturer
+* Name
+|===
+
+The following table illustrates which components affects a particular fingerprints.
+
+[cols="2h,1,1,1", options="header"]
+|===
+|
+| Fixed Disk Drives
+| Network Adapters
+| RAM Modules
+| Motherboard + BIOS
+| Fingerprint #1
+| Fingerprint #2
+| Fingerprint #3
+| Operating System + CPUs
+| Fingerprint #4
+| Fingerprint #5
+| Fingerprint #6
+| Video Adapters + Batteries
+| Fingerprint #7
+| Fingerprint #8
+| Fingerprint #9
+|===
+
+If a single component is replaced, exactly three fingerprints change and six remain the same.
+If two component are replaced, at most six fingerprints change and three remain the same.
+If three component are replaced, all fingerprints may change.
+
+For example::
+ * If CPU is replaced, fingerprints #4, #5, #6 will change, but #1, #2, #3, #7, #8, #9 will remain the same.
+ * If RAM module is installed, fingerprints #3, #6, #9 will change, but #1, #2, #4, #5, #7, #8 will remain the same.
+
+== Client &hArr; NT-REST
+
+Loopback connections only.
+Authenticated connections only.
+
+=== Request
+
+[cols="1,7", options="header"]
+|===
+| Method
+| URL
+| POST
+| http://localhost.ntre.st/nt-rest/v1/fingerprinting
+|===
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| Cookie
+| Yes
+| Session-ID=<session-id>
+| X-Session-ID
+| Yes
+| <session-id>
+|===
+
+All other headers, except the headers from the list below, are forwarded from client to fingerprinting server.
+
+include::partial$relay-client-ignored-headers.adoc[]
+
+==== Body
+
+No request body is required.
+However, any non-empty request body received from client is forwarded from client to fingerprinting server as is, without any processing.
+
+=== Response
+
+==== Status
+
+Status code returned by fingerprinting server is forwarded from fingerprinting server to client as is, without any processing.
+Recommended status codes are:
+
+200:: Fingerprinting succeeded.
+403:: Fingerprinting is forbidden.
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+|===
+
+All other headers, except the headers from the list below, are forwarded from fingerprinting server to client.
+
+include::partial$relay-server-ignored-headers.adoc[]
+
+==== Body
+
+No response body is required.
+However, any non-empty response body received from fingerprinting server is forwarded from fingerprinting server to client as is, without any processing.
+
+== NT-REST &hArr; Server
+
+=== Request
+
+[cols="1,1", options="header"]
+|===
+| Method
+| URL
+| xref:configuration/origin-configuration.adoc[Configured per origin]
+| xref:configuration/origin-configuration.adoc[Configured per origin]
+|===
+
+==== Headers
+
+[cols="2,2,4", options="header"]
+|===
+| Name
+| Is mandatory
+| Expected value
+| Content-Type
+| Yes
+| "`text/json; charset=UTF-8`" or +
+"`application/json; charset=UTF-8`" or +
+"`application/bson`" or +
+"`application/cbor`" or +
+"`application/msgpack`" or +
+"`application/ubjson`"
+| X-Fingerprint-1
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-2
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-3
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-4
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-5
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-6
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-7
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-8
+| Yes
+| Unique machine identifier.
+| X-Fingerprint-9
+| Yes
+| Unique machine identifier.
+|===
+
+All other headers, except the headers from the list below, are forwarded from client to fingerprinting server.
+
+All xref:configuration/origin-configuration.adoc[statically configured headers].
+
+include::partial$relay-client-ignored-headers.adoc[]
+
+==== Body
+
+Any request body received from client is forwarded from client to fingerprinting server as is, without any processing.
+
+=== Response
+
+==== Status
+
+Status code returned by fingerprinting server is forwarded from fingerprinting server to client as is, without any processing.
+Recommended status codes are:
+
+200:: Fingerprinting succeeded.
+403:: Fingerprinting is forbidden.
+
+==== Headers
+
+All headers, except the headers from the list below, are forwarded from fingerprinting server to client.
+
+include::partial$relay-server-ignored-headers.adoc[]
+
+==== Body
+
+Any non-empty response body received from fingerprinting server is forwarded from fingerprinting server to client as is, without any processing.
+
+== Client Example
+
+=== JavaScript
+
+[source,javascript]
+----
+fetch(
+    'http://localhost.ntre.st/nt-rest/v1/fingerprinting',
+    {
+        method: 'POST',
+        cache: 'no-cache',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-Session-ID': '<session-id>'
+        },
+        redirect: 'error',
+        referrerPolicy: 'origin-when-cross-origin',
+        body: '<additional-data>'
+    }
+);
+----

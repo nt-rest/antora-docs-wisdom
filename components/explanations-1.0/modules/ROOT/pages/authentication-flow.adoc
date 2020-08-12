@@ -1,0 +1,112 @@
+= Authentication Flow
+
+== Local Authentication
+
+=== Flow
+
+[plantuml]
+....
+@startuml
+hide empty description
+
+state "Check if connection is loopback" as s_lb {
+  state "Is address family\nequal IPv4?"       as s1_ipv4_f
+  state "Is address family\nequal IPv6?"       as s1_ipv6_f
+  state "Is address subnet\nequal 127.0.0.0/8" as s1_ipv4_sn
+  state "Is address subnet\nequal ::1/128?"    as s1_ipv6_sn
+}
+
+state "Get Process ID from  IPv4 connection" as s2_p_id {
+  state "Enumerate all\nIPv4 connections" as s2_enum
+  state "Find IPv4 connection\nwith matching\nclient and server addresses" as s2_find
+}
+
+state "Get Process ID from  IPv6 connection" as s3_p_id {
+  state "Enumerate all\nIPv6 connections" as s3_enum
+  state "Find IPv6 connection\nwith matching\nclient and server addresses" as s3_find
+}
+
+state "Validate Executable Module" as s4_m {
+  state "Read process\nversion info" as s4_vr
+  state "Compare version\ninfo to the list of\nwell-known web-browsers" as s4_vc
+  state "Detect module\nvalidation method" as s4_mv
+  state "Validate Authenticode signature" as s4_as
+  state "Validate Windows Resource" as s4_wr
+}
+
+state "ERROR\nnot a loopback connection" as e1
+state "ERROR\ncannot find owning process" as e2
+state "ERROR\ninvalid executable module" as e3
+
+[*]        --> s1_ipv4_f
+s1_ipv4_f  --> s1_ipv6_f: No
+s1_ipv4_f  --> s1_ipv4_sn: Yes
+s1_ipv6_f  --> e1 : No
+s1_ipv6_f  --> s1_ipv6_sn : Yes
+s1_ipv4_sn --> e1 : No
+s1_ipv6_sn --> e1 : No
+
+s1_ipv4_sn --> s2_enum : Yes
+s1_ipv6_sn --> s3_enum : Yes
+
+s2_enum --> s2_find
+s3_enum --> s3_find
+
+s2_find --> e2 : No
+s3_find --> e2 : No
+
+s2_find --> s4_vr : Yes
+s3_find --> s4_vr : Yes
+
+s4_vr --> s4_vc : Yes
+s4_vr --> e3 : No
+s4_vc --> s4_mv : Yes
+s4_vc --> e3 : No
+s4_mv --> s4_as : Mozilla Firefox,\nGoogle Chrome
+s4_mv --> s4_wr : Microsoft Internet Explorer,\nMicrosoft EDGE
+s4_mv --> e3 : No
+s4_as --> e3 : No
+s4_wr --> e3 : No
+
+s4_as --> [*] : Yes
+s4_wr --> [*] : Yes
+@enduml
+....
+
+=== List of Well-known Web-browsers
+
+These browsers cover 99% of user base. We will be happy to add more browsers if necessary.
+
+[options="header"]
+|===
+| Company Name | Product Name | File Name | Verification Method | Executable Path
+| Google LLC
+| Google Chrome
+| chrome.exe
+| Verify Authenticode Signature
+| (any)
+| Microsoft Corporation
+| Internet Explorer
+| IEXPLORE.EXE
+| Verify Path and Windows(TM) Resource Status
+| %ProgramFiles%\Internet Explorer\IEXPLORE.EXE
+| Microsoft Corporation
+| Microsoft Edge Web Platform
+| MicrosoftEdgeCP.exe
+| Verify Path and Windows(TM) Resource Status
+| %WINDIR%\System32\MicrosoftEdgeCP.exe
+| Microsoft Corporation
+| Microsoft Edge
+| msedge.exe
+| Verify Path and Windows(TM) Resource Status
+| %ProgramFiles%\Microsoft\Edge\Application\msedge.exe
+| Mozilla Corporation
+| Firefox
+| firefox.exe
+| Verify Authenticode Signature
+| (any)
+|===
+
+== Relay Authentication
+
+=== Flow
