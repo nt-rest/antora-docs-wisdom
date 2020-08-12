@@ -6,7 +6,7 @@
         {
             "label": "nt-rest.github.io",
             "type": "shell",
-            "command": "./build.cmd",
+            "command": "./build.ps1",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
