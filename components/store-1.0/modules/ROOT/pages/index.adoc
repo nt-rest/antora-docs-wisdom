@@ -28,14 +28,18 @@ per legal entity, per year.
 
 |===
 
-== When Do You Need a Commercial License
+== When Do You Need a Commercial License?
 
-This is not an exhaustive list of cases, but just a few examples to illustrate general rules. If you are not sure or simply feel confused, never hesitate to mailto:licensing@nt-rest.com[write us^]
+This is not an exhaustive list of cases, but just a few examples to illustrate the general rules. If you are not sure or simply feel confused, never hesitate to mailto:licensing@nt-rest.com[write us^].
 
-* If a company fingerprints third-party device;
-* If a company authenticates a person who is not an employee or contractor;
-* If a company prints a document and third-party is the final owner of the hard copy;
-* If a company scans an image and third-party is the initial owner of the document.
+* If you fingerprint a *third-party* devices, then you need a commercial license;
+* If you fingerprint devices you own, then you do *not* need a commercial license;
+* If you authenticate a *third-party*, then you need a commercial license;
+* If you authenticate a person who is an employee or contractor, then you do *not* need a commercial license;
+* If you print a document and a *third-party* is the final owner of the hard copy, then you need a commercial license;
+* If you print a document and you are the final owner of the hard copy, then you do *not* need a commercial license;
+* If you scan an image and a *third-party* is the initial owner of the document, then you need a commercial license.
+* If you scan an image and you are the initial owner of the document, then you do *not* need a commercial license.
 
 == Additional Notes
 
