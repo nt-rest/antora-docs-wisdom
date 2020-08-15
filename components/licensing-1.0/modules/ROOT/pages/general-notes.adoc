@@ -8,10 +8,10 @@ Everything else, including but not limited to `examples` directory, is licensed 
 
 xref:bsl-11.adoc[] was created by David Axmark and Michael Widenius to provide a mutually beneficial balance between the user benefits of true Open Source software that is free of cost and provides open access to all of the product code for modification, distribution, etc., and the sustainability needs of software developers to continue delivering product innovation and maintenance.
 
-Source code of the project itself is available right now, can be used for non-production right now and will eventually become relicensed under xref:licensing:bsd-4.adoc[].
+Source code of the project itself is available right now, can be used for non-production right now and will eventually become relicensed under xref:bsd-4.adoc[].
 Read https://mariadb.com/bsl-faq-adopting/[BSL FAQ^] to address any questions.
 If you want to review, compare, benchmark or anything similar, feel free to reference the source code.
 
 Source code of the examples can be used without restrictions.
 
-If you need anything not explicitly allowed or even prohibited by xref:licensing:bsl-11.adoc[] or simply feel confused, never hesitate to mailto:licensing@nt-rest.com[write us^], we will try to be friendly, relate to your specific situation and make a personal exception.
+If you need anything not explicitly allowed or even prohibited by xref:bsl-11.adoc[] or simply feel confused, never hesitate to mailto:licensing@nt-rest.com[write us^], we will try to be friendly, relate to your specific situation and make a personal exception.
